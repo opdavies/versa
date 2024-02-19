@@ -1,0 +1,13 @@
+name: versa
+type: symfony
+language: php
+
+flake:
+  devshell:
+    packages:
+      - php82
+      - php82Packages.composer
+
+# experimental:
+#   TODO: not yet supported in Symfony projects?
+#   createInclusiveGitIgnoreFile: true
