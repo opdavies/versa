@@ -3,9 +3,18 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
+use Symfony\Component\Process\Process;
 
 $application = new SingleCommandApplication();
+
+$application->addArgument(
+    name: 'command',
+    mode: InputArgument::REQUIRED,
+    description: 'The command to run',
+);
 
 $application->addOption(
     name: 'type',
@@ -15,9 +24,15 @@ $application->addOption(
 );
 
 $application->setCode(function (InputInterface $input): int {
-    dd(
-        $input->getOption('type'),
-    );
+    // TODO: only allow defined commands - build, install, test, run.
+    switch ($input->getArgument('command')) {
+        case 'install':
+            // TODO: Composer in Docker Compose?
+            $process = new Process(command: ['composer', 'install']);
+            $process->setTty(true);
+            $process->run();
+            break;
+    }
 
     return 0;
 });
