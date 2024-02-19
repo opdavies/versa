@@ -18,6 +18,7 @@ $application->addArgument(
 
 $application->addOption(
     name: 'type',
+    shortcut: 't',
     mode: InputArgument::OPTIONAL,
     description: 'The project type',
     suggestedValues: ['drupal', 'sculpin'],

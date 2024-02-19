@@ -1,5 +1,9 @@
 # Changelog
 
+## Unrelased
+
+- Add `-t` as a shortcut for `--type`.
+
 ## 0.1.0
 
 - Add `install` for all projects based on the assumption it's a PHP project.
