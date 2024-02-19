@@ -32,6 +32,14 @@ $application->setCode(function (InputInterface $input): int {
             $process->setTty(true);
             $process->run();
             break;
+
+        case 'test':
+            // TODO: PHPUnit, Pest or ParaTest.
+            // TODO: commands in Docker Compose?
+            $process = new Process(command: ['./vendor/bin/phpunit']);
+            $process->setTty(true);
+            $process->run();
+            break;
     }
 
     return 0;
