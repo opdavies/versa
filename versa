@@ -7,7 +7,18 @@ use Symfony\Component\Console\SingleCommandApplication;
 
 $application = new SingleCommandApplication();
 
-$application->setCode(function (): int {
+$application->addOption(
+    name: 'type',
+    mode: InputArgument::OPTIONAL,
+    description: 'The project type',
+    suggestedValues: ['drupal', 'sculpin'],
+);
+
+$application->setCode(function (InputInterface $input): int {
+    dd(
+        $input->getOption('type'),
+    );
+
     return 0;
 });
 
