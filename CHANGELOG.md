@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-None.
+* Prevent timeout errors with `versa run`.
 
 ## 0.2.0
 

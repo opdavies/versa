@@ -50,6 +50,7 @@ $application->setCode(function (InputInterface $input): int {
 
             if ($filesystem->exists($workingDir.'/docker-compose.yaml')) {
                 $process = new Process(command: ['docker', 'compose', 'up']);
+                $process->setTimeout(null);
                 $process->setTty(true);
                 $process->setWorkingDirectory($workingDir);
                 $process->run();
@@ -58,6 +59,7 @@ $application->setCode(function (InputInterface $input): int {
                     case 'sculpin':
                         // TODO: how to pass arbitrary arguments, such as `--port 8001`?
                         $process = new Process(command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch']);
+                        $process->setTimeout(null);
                         $process->setTty(true);
                         $process->setWorkingDirectory($workingDir);
                         $process->run();
