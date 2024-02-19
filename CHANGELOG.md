@@ -1,6 +1,10 @@
 # Changelog
 
-## Unrelased
+## Unreleased
+
+None.
+
+## 0.2.0
 
 - Run `docker compose up` if there is a `docker-compose.yaml` file when running `versa run`.
 - Add `--working-dir` to run versa in a different directory.
