@@ -6,6 +6,7 @@ require __DIR__.'/vendor/autoload.php';
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 $application = new SingleCommandApplication();
@@ -44,14 +45,24 @@ $application->setCode(function (InputInterface $input): int {
             break;
 
         case 'run':
-            switch ($input->getOption('type')) {
-                case 'sculpin':
-                    // TODO: how to pass arbitrary arguments, such as `--port 8001`?
-                    $process = new Process(command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch']);
-                    $process->setTty(true);
-                    $process->setWorkingDirectory($input->getOption('working-dir'));
-                    $process->run();
-                    break;
+            $workingDir = $input->getOption('working-dir');
+            $filesystem = new Filesystem();
+
+            if ($filesystem->exists($workingDir.'/docker-compose.yaml')) {
+                $process = new Process(command: ['docker', 'compose', 'up']);
+                $process->setTty(true);
+                $process->setWorkingDirectory($workingDir);
+                $process->run();
+            } else {
+                switch ($input->getOption('type')) {
+                    case 'sculpin':
+                        // TODO: how to pass arbitrary arguments, such as `--port 8001`?
+                        $process = new Process(command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch']);
+                        $process->setTty(true);
+                        $process->setWorkingDirectory($workingDir);
+                        $process->run();
+                        break;
+                }
             }
             break;
 
