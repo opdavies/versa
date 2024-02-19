@@ -33,6 +33,17 @@ $application->setCode(function (InputInterface $input): int {
             $process->run();
             break;
 
+        case 'run':
+            switch ($input->getOption('type')) {
+                case 'sculpin':
+                    // TODO: how to pass arbitrary arguments, such as `--port 8001`?
+                    $process = new Process(command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch']);
+                    $process->setTty(true);
+                    $process->run();
+                    break;
+            }
+            break;
+
         case 'test':
             // TODO: PHPUnit, Pest or ParaTest.
             // TODO: commands in Docker Compose?
