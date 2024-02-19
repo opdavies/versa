@@ -1,0 +1,12 @@
+{
+    "output": "dist/versa",
+    "files": [
+      "versa"
+    ],
+    "directories": [
+      "vendor"
+    ],
+    "check-requirements": true,
+    "exclude-composer-files": false,
+    "compression": "GZ"
+}
