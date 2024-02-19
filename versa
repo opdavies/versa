@@ -24,6 +24,14 @@ $application->addOption(
     suggestedValues: ['drupal', 'sculpin'],
 );
 
+$application->addOption(
+    name: 'working-dir',
+    shortcut: 'd',
+    mode: InputArgument::OPTIONAL,
+    description: 'The project\'s working directory',
+    default: '.',
+);
+
 $application->setCode(function (InputInterface $input): int {
     // TODO: only allow defined commands - build, install, test, run.
     switch ($input->getArgument('command')) {
@@ -31,6 +39,7 @@ $application->setCode(function (InputInterface $input): int {
             // TODO: Composer in Docker Compose?
             $process = new Process(command: ['composer', 'install']);
             $process->setTty(true);
+            $process->setWorkingDirectory($input->getOption('working-dir'));
             $process->run();
             break;
 
@@ -40,6 +49,7 @@ $application->setCode(function (InputInterface $input): int {
                     // TODO: how to pass arbitrary arguments, such as `--port 8001`?
                     $process = new Process(command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch']);
                     $process->setTty(true);
+                    $process->setWorkingDirectory($input->getOption('working-dir'));
                     $process->run();
                     break;
             }
@@ -50,6 +60,7 @@ $application->setCode(function (InputInterface $input): int {
             // TODO: commands in Docker Compose?
             $process = new Process(command: ['./vendor/bin/phpunit']);
             $process->setTty(true);
+            $process->setWorkingDirectory($input->getOption('working-dir'));
             $process->run();
             break;
     }

@@ -2,6 +2,7 @@
 
 ## Unrelased
 
+- Add `--working-dir` to run versa in a different directory.
 - Add `-t` as a shortcut for `--type`.
 
 ## 0.1.0
