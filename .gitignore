@@ -12,3 +12,7 @@
 # Box
 /dist/
 /vendor-bin/
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
