@@ -4,11 +4,12 @@
 require __DIR__.'/vendor/autoload.php';
 
 use App\Enum\ProjectType;
+use App\Process\Process;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Process as SymfonyProcess;
 
 $application = new SingleCommandApplication();
 
@@ -41,20 +42,6 @@ $application->addOption(
     default: '.',
 );
 
-/**
- * @param non-empty-array<int, non-empty-string> $command
- * @param string $workingDir
- * @param ?string $extraArgs
- */
-function buildProcess(array $command, string $workingDir, ?string $extraArgs = null): Process
-{
-    $process = new Process(command: array_filter([...$command, $extraArgs]));
-    $process->setTty(true);
-    $process->setWorkingDirectory($workingDir);
-
-    return $process;
-}
-
 $application->setCode(function (InputInterface $input): int {
     $extraArgs = $input->getOption('extra-args');
     $workingDir = $input->getOption('working-dir');
@@ -69,7 +56,7 @@ $application->setCode(function (InputInterface $input): int {
             switch ($input->getOption('type')) {
                 case ProjectType::Drupal->value:
                     if ($isDockerCompose) {
-                        $process = buildProcess(
+                        $process = Process::create(
                             command: ['docker', 'compose', 'build'],
                             extraArgs: $extraArgs,
                             workingDir: $workingDir,
@@ -80,7 +67,7 @@ $application->setCode(function (InputInterface $input): int {
             }
             switch ($input->getOption('type')) {
                 case ProjectType::Sculpin->value:
-                    $process = buildProcess(
+                    $process = Process::create(
                         command: ['./vendor/bin/sculpin', 'generate'],
                         extraArgs: $extraArgs,
                         workingDir: $workingDir,
@@ -92,7 +79,7 @@ $application->setCode(function (InputInterface $input): int {
 
         case 'install':
             // TODO: Composer in Docker Compose?
-            $process = buildProcess(
+            $process = Process::create(
                 command: ['composer', 'install'],
                 extraArgs: $extraArgs,
                 workingDir: $workingDir,
@@ -102,7 +89,7 @@ $application->setCode(function (InputInterface $input): int {
 
         case 'run':
             if ($isDockerCompose) {
-                $process = buildProcess(
+                $process = Process::create(
                     command: ['docker', 'compose', 'up'],
                     extraArgs: $extraArgs,
                     workingDir: $workingDir,
@@ -112,7 +99,7 @@ $application->setCode(function (InputInterface $input): int {
             } else {
                 switch ($input->getOption('type')) {
                     case ProjectType::Sculpin->value:
-                        $process = buildProcess(
+                        $process = Process::create(
                             command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch'],
                             extraArgs: $extraArgs,
                             workingDir: $workingDir,
@@ -127,7 +114,7 @@ $application->setCode(function (InputInterface $input): int {
         case 'test':
             // TODO: PHPUnit, Pest or ParaTest.
             // TODO: commands in Docker Compose?
-            $process = buildProcess(
+            $process = Process::create(
                 command: ['./vendor/bin/phpunit'],
                 extraArgs: $extraArgs,
                 workingDir: $workingDir,
