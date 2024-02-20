@@ -34,20 +34,21 @@ $application->addOption(
 );
 
 $application->setCode(function (InputInterface $input): int {
+    $filesystem = new Filesystem();
+
+    $workingDir = $input->getOption('working-dir');
+
     // TODO: only allow defined commands - build, install, test, run.
     switch ($input->getArgument('command')) {
         case 'install':
             // TODO: Composer in Docker Compose?
             $process = new Process(command: ['composer', 'install']);
             $process->setTty(true);
-            $process->setWorkingDirectory($input->getOption('working-dir'));
+            $process->setWorkingDirectory($workingDir);
             $process->run();
             break;
 
         case 'run':
-            $workingDir = $input->getOption('working-dir');
-            $filesystem = new Filesystem();
-
             if ($filesystem->exists($workingDir.'/docker-compose.yaml')) {
                 $process = new Process(command: ['docker', 'compose', 'up']);
                 $process->setTimeout(null);
@@ -73,7 +74,7 @@ $application->setCode(function (InputInterface $input): int {
             // TODO: commands in Docker Compose?
             $process = new Process(command: ['./vendor/bin/phpunit']);
             $process->setTty(true);
-            $process->setWorkingDirectory($input->getOption('working-dir'));
+            $process->setWorkingDirectory($workingDir);
             $process->run();
             break;
     }
