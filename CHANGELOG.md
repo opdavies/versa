@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Add `--extra-args` to pass extra arguments to the underlying command.
 * Prevent timeout errors with `versa run`.
 
 ## 0.2.0

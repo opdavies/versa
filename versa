@@ -18,6 +18,13 @@ $application->addArgument(
 );
 
 $application->addOption(
+    name: 'extra-args',
+    shortcut: 'a',
+    mode: InputArgument::OPTIONAL,
+    description: 'Any additonal arguments to pass to the command.',
+);
+
+$application->addOption(
     name: 'type',
     shortcut: 't',
     mode: InputArgument::OPTIONAL,
@@ -36,13 +43,14 @@ $application->addOption(
 $application->setCode(function (InputInterface $input): int {
     $filesystem = new Filesystem();
 
+    $extraArgs = $input->getOption('extra-args');
     $workingDir = $input->getOption('working-dir');
 
     // TODO: only allow defined commands - build, install, test, run.
     switch ($input->getArgument('command')) {
         case 'install':
             // TODO: Composer in Docker Compose?
-            $process = new Process(command: ['composer', 'install']);
+            $process = new Process(command: array_filter(['composer', 'install', $extraArgs]));
             $process->setTty(true);
             $process->setWorkingDirectory($workingDir);
             $process->run();
@@ -50,7 +58,7 @@ $application->setCode(function (InputInterface $input): int {
 
         case 'run':
             if ($filesystem->exists($workingDir.'/docker-compose.yaml')) {
-                $process = new Process(command: ['docker', 'compose', 'up']);
+                $process = new Process(command: array_filter(['docker', 'compose', 'up', $extraArgs]));
                 $process->setTimeout(null);
                 $process->setTty(true);
                 $process->setWorkingDirectory($workingDir);
@@ -58,8 +66,7 @@ $application->setCode(function (InputInterface $input): int {
             } else {
                 switch ($input->getOption('type')) {
                     case 'sculpin':
-                        // TODO: how to pass arbitrary arguments, such as `--port 8001`?
-                        $process = new Process(command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch']);
+                        $process = new Process(command: array_filter(['./vendor/bin/sculpin', 'generate', '--server', '--watch', $extraArgs]));
                         $process->setTimeout(null);
                         $process->setTty(true);
                         $process->setWorkingDirectory($workingDir);
@@ -72,7 +79,7 @@ $application->setCode(function (InputInterface $input): int {
         case 'test':
             // TODO: PHPUnit, Pest or ParaTest.
             // TODO: commands in Docker Compose?
-            $process = new Process(command: ['./vendor/bin/phpunit']);
+            $process = new Process(command: array_filter(['./vendor/bin/phpunit', $extraArgs]));
             $process->setTty(true);
             $process->setWorkingDirectory($workingDir);
             $process->run();
