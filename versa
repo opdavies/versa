@@ -41,10 +41,12 @@ $application->addOption(
 );
 
 $application->setCode(function (InputInterface $input): int {
-    $filesystem = new Filesystem();
-
     $extraArgs = $input->getOption('extra-args');
     $workingDir = $input->getOption('working-dir');
+
+    $filesystem = new Filesystem();
+
+    $isDockerCompose = $filesystem->exists($workingDir.'/docker-compose.yaml');
 
     // TODO: only allow defined commands - build, install, test, run.
     switch ($input->getArgument('command')) {
@@ -57,7 +59,7 @@ $application->setCode(function (InputInterface $input): int {
             break;
 
         case 'run':
-            if ($filesystem->exists($workingDir.'/docker-compose.yaml')) {
+            if ($isDockerCompose) {
                 $process = new Process(command: array_filter(['docker', 'compose', 'up', $extraArgs]));
                 $process->setTimeout(null);
                 $process->setTty(true);
