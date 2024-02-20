@@ -3,6 +3,7 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 
+use App\Enum\ProjectType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
@@ -52,7 +53,7 @@ $application->setCode(function (InputInterface $input): int {
     switch ($input->getArgument('command')) {
         case 'build':
             switch ($input->getOption('type')) {
-                case 'sculpin':
+                case ProjectType::Sculpin->value:
                     $process = new Process(command: array_filter(['./vendor/bin/sculpin', 'generate', $extraArgs]));
                     $process->setTty(true);
                     $process->setWorkingDirectory($workingDir);
@@ -78,7 +79,7 @@ $application->setCode(function (InputInterface $input): int {
                 $process->run();
             } else {
                 switch ($input->getOption('type')) {
-                    case 'sculpin':
+                    case ProjectType::Sculpin->value:
                         $process = new Process(command: array_filter(['./vendor/bin/sculpin', 'generate', '--server', '--watch', $extraArgs]));
                         $process->setTimeout(null);
                         $process->setTty(true);

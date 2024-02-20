@@ -4,6 +4,7 @@
       "versa"
     ],
     "directories": [
+      "src",
       "vendor"
     ],
     "check-requirements": true,
