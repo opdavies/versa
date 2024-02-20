@@ -50,6 +50,17 @@ $application->setCode(function (InputInterface $input): int {
 
     // TODO: only allow defined commands - build, install, test, run.
     switch ($input->getArgument('command')) {
+        case 'build':
+            switch ($input->getOption('type')) {
+                case 'sculpin':
+                    $process = new Process(command: array_filter(['./vendor/bin/sculpin', 'generate', $extraArgs]));
+                    $process->setTty(true);
+                    $process->setWorkingDirectory($workingDir);
+                    $process->run();
+                    break;
+            }
+            break;
+
         case 'install':
             // TODO: Composer in Docker Compose?
             $process = new Process(command: array_filter(['composer', 'install', $extraArgs]));
