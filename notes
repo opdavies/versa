@@ -1,0 +1,3 @@
+Add TypeScript and JavaScript suppport - e.g. Fractal
+Review https://github.com/phpstan/phpstan-symfony
+Refactor to separate commands rather than using a single command application?
