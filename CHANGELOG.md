@@ -4,6 +4,7 @@
 
 ### Added
 
+* Automatically find the PHP project type (i.e. Drupal or Sculpin) based on its `composer.json` dependencies.
 * Add `versa build` to build a Sculpin project.
 * Add `--extra-args` to pass extra arguments to the underlying command.
 
