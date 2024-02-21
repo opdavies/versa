@@ -9,4 +9,5 @@ enum ProjectType: string
     // PHP.
     case Drupal = 'drupal';
     case Sculpin = 'sculpin';
+    case Symfony = 'symfony';
 }

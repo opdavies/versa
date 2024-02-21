@@ -4,6 +4,7 @@
 
 ### Added
 
+* Add a Symfony project type.
 * Automatically use PHPUnit or ParaTest based on `require-dev` dependencies.
 * Automatically find the PHP project type (i.e. Drupal or Sculpin) based on its `composer.json` dependencies.
 * Add `versa build` to build a Sculpin project.

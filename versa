@@ -68,6 +68,8 @@ $application->setCode(function (InputInterface $input): int {
             $projectType = ProjectType::Drupal->value;
         } elseif (in_array(needle: 'sculpin/sculpin', haystack: $dependencies, strict: true)) {
             $projectType = ProjectType::Sculpin->value;
+        } elseif (in_array(needle: 'symfony/framework-bundle', haystack: $dependencies, strict: true)) {
+            $projectType = ProjectType::Symfony->value;
         }
     }
 
@@ -91,6 +93,9 @@ $application->setCode(function (InputInterface $input): int {
                         $process->run();
                     }
                     break;
+
+                case ProjectType::Symfony->value:
+                    throw new RuntimeException('No build command set for Symfony projects.');
 
                 case ProjectType::Sculpin->value:
                     $process = Process::create(
