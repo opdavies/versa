@@ -20,8 +20,7 @@ final class TestCommand extends AbstractCommand
             associative: true,
         );
 
-        // TODO: what if there are no dev dependencies?
-        $devDependencies = array_keys($json['require-dev']);
+        $devDependencies = array_keys($json['require-dev'] ?? []);
 
         // TODO: Pest and Behat.
         if (in_array(needle: 'brianium/paratest', haystack: $devDependencies, strict: true)) {
