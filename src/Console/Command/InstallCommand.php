@@ -20,6 +20,7 @@ final class InstallCommand extends AbstractCommand
             workingDir: $this->workingDir,
         );
 
+        $process->setTimeout(null);
         $process->run();
 
         return Command::SUCCESS;
