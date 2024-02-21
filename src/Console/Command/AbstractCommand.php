@@ -17,6 +17,14 @@ abstract class AbstractCommand extends Command
         );
 
         $this->addOption(
+            name: 'language',
+            shortcut: 'l',
+            mode: InputArgument::OPTIONAL,
+            description: 'The project language',
+            suggestedValues: ['php', 'javascript'],
+        );
+
+        $this->addOption(
             name: 'type',
             shortcut: 't',
             mode: InputArgument::OPTIONAL,
