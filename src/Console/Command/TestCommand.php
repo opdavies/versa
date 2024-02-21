@@ -11,12 +11,11 @@ final class TestCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $extraArgs = $input->getOption('extra-args');
-        $workingDir = $input->getOption('working-dir');
+        parent::execute($input, $output);
 
         // TODO: move this logic to a service so it can be tested.
         $json = json_decode(
-            json: strval(file_get_contents($workingDir.'/composer.json')),
+            json: strval(file_get_contents($this->workingDir.'/composer.json')),
             associative: true,
         );
 
@@ -33,8 +32,8 @@ final class TestCommand extends AbstractCommand
         // TODO: commands in Docker Compose?
         $process = Process::create(
             command: $command,
-            extraArgs: $extraArgs,
-            workingDir: $workingDir,
+            extraArgs: $this->extraArgs,
+            workingDir: $this->workingDir,
         );
 
         $process->run();
