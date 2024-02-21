@@ -16,14 +16,17 @@ final class BuildCommand extends AbstractCommand
     {
         $projectType = null;
 
+        $extraArgs = $input->getOption('extra-args');
+        $workingDir = $input->getOption('working-dir');
+
         $filesystem = new Filesystem();
 
         // Attempt to prepopulate some of the options, such as the project type
         // based on its dependencies.
         // TODO: move this logic to a service so it can be tested.
-        if ($filesystem->exists($this->workingDir.'/composer.json')) {
+        if ($filesystem->exists($workingDir.'/composer.json')) {
             $json = json_decode(
-                json: strval(file_get_contents($this->workingDir.'/composer.json')),
+                json: strval(file_get_contents($workingDir.'/composer.json')),
                 associative: true,
             );
 
@@ -42,15 +45,15 @@ final class BuildCommand extends AbstractCommand
         // the option value if there is one.
         $projectType = $input->getOption('type') ?? $projectType;
 
-        $isDockerCompose = $filesystem->exists($this->workingDir . '/docker-compose.yaml');
+        $isDockerCompose = $filesystem->exists($workingDir . '/docker-compose.yaml');
 
         switch ($projectType) {
             case ProjectType::Drupal->value:
                 if ($isDockerCompose) {
                     $process = Process::create(
                         command: ['docker', 'compose', 'build'],
-                        extraArgs: $this->extraArgs,
-                        workingDir: $this->workingDir,
+                        extraArgs: $extraArgs,
+                        workingDir: $workingDir,
                     );
 
                     $process->run();
@@ -64,8 +67,8 @@ final class BuildCommand extends AbstractCommand
             case ProjectType::Sculpin->value:
                 $process = Process::create(
                     command: ['./vendor/bin/sculpin', 'generate'],
-                    extraArgs: $this->extraArgs,
-                    workingDir: $this->workingDir,
+                    extraArgs: $extraArgs,
+                    workingDir: $workingDir,
                 );
 
                 $process->run();

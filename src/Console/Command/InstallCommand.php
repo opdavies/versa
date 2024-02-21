@@ -11,13 +11,14 @@ final class InstallCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        parent::execute($input, $output);
+        $extraArgs = $input->getOption('extra-args');
+        $workingDir = $input->getOption('working-dir');
 
         // TODO: Composer in Docker Compose?
         $process = Process::create(
             command: ['composer', 'install'],
-            extraArgs: $this->extraArgs,
-            workingDir: $this->workingDir,
+            extraArgs: $extraArgs,
+            workingDir: $workingDir,
         );
 
         $process->setTimeout(null);

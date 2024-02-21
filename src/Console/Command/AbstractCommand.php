@@ -4,15 +4,9 @@ namespace App\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends Command
 {
-    protected ?string $extraArgs;
-
-    protected string $workingDir;
-
     protected function configure(): void
     {
         $this->addOption(
@@ -37,13 +31,5 @@ abstract class AbstractCommand extends Command
             description: 'The project\'s working directory',
             default: '.',
         );
-    }
-
-    public function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $this->extraArgs = $input->getOption('extra-args');
-        $this->workingDir = $input->getOption('working-dir');
-
-        return Command::SUCCESS;
     }
 }

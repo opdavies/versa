@@ -13,15 +13,16 @@ final class RunCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        parent::execute($input, $output);
-
         $projectType = null;
+
+        $extraArgs = $input->getOption('extra-args');
+        $workingDir = $input->getOption('working-dir');
 
         // Attempt to prepopulate some of the options, such as the project type
         // based on its dependencies.
         // TODO: move this logic to a service so it can be tested.
         $json = json_decode(
-            json: strval(file_get_contents($this->workingDir.'/composer.json')),
+            json: strval(file_get_contents($workingDir.'/composer.json')),
             associative: true,
         );
 
@@ -40,13 +41,13 @@ final class RunCommand extends AbstractCommand
         $projectType = $input->getOption('type') ?? $projectType;
 
         $filesystem = new Filesystem();
-        $isDockerCompose = $filesystem->exists($this->workingDir . '/docker-compose.yaml');
+        $isDockerCompose = $filesystem->exists($workingDir . '/docker-compose.yaml');
 
         if ($isDockerCompose) {
             $process = Process::create(
                 command: ['docker', 'compose', 'up'],
-                extraArgs: $this->extraArgs,
-                workingDir: $this->workingDir,
+                extraArgs: $extraArgs,
+                workingDir: $workingDir,
             );
             $process->setTimeout(null);
 
@@ -56,8 +57,8 @@ final class RunCommand extends AbstractCommand
                 case ProjectType::Sculpin->value:
                     $process = Process::create(
                         command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch'],
-                        extraArgs: $this->extraArgs,
-                        workingDir: $this->workingDir,
+                        extraArgs: $extraArgs,
+                        workingDir: $workingDir,
                     );
                     $process->setTimeout(null);
 
