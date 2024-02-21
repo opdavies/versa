@@ -95,6 +95,7 @@ $application->setCode(function (InputInterface $input): int {
                     break;
 
                 case ProjectType::Symfony->value:
+                    // TODO: run humbug/box if added to generate a phar?
                     throw new RuntimeException('No build command set for Symfony projects.');
 
                 case ProjectType::Sculpin->value:
