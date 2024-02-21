@@ -3,165 +3,19 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 
-use App\Enum\ProjectType;
-use App\Process\Process;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\SingleCommandApplication;
-use Symfony\Component\Filesystem\Filesystem;
+use App\Console\Command\BuildCommand;
+use App\Console\Command\InstallCommand;
+use App\Console\Command\RunCommand;
+use App\Console\Command\TestCommand;
+use Symfony\Component\Console\Application;
 
-$application = new SingleCommandApplication();
+$application = new Application();
 
-$application->addArgument(
-    name: 'command',
-    mode: InputArgument::REQUIRED,
-    description: 'The command to run',
-);
-
-$application->addOption(
-    name: 'extra-args',
-    shortcut: 'a',
-    mode: InputArgument::OPTIONAL,
-    description: 'Any additonal arguments to pass to the command.',
-);
-
-$application->addOption(
-    name: 'type',
-    shortcut: 't',
-    mode: InputArgument::OPTIONAL,
-    description: 'The project type',
-    suggestedValues: ['drupal', 'sculpin'],
-);
-
-$application->addOption(
-    name: 'working-dir',
-    shortcut: 'd',
-    mode: InputArgument::OPTIONAL,
-    description: 'The project\'s working directory',
-    default: '.',
-);
-
-$application->setCode(function (InputInterface $input): int {
-    $projectType = null;
-
-    $devDependencies = [];
-
-    $extraArgs = $input->getOption('extra-args');
-    $workingDir = $input->getOption('working-dir');
-
-    $filesystem = new Filesystem();
-
-    // Attempt to prepopulate some of the options, such as the project type
-    // based on its dependencies.
-    // TODO: move this logic to a service so it can be tested.
-    if ($filesystem->exists($workingDir.'/composer.json')) {
-        $json = json_decode(
-            json: strval(file_get_contents($workingDir.'/composer.json')),
-            associative: true,
-        );
-
-        $dependencies = array_keys($json['require']);
-        // TODO: what if there are no dev dependencies?
-        $devDependencies = array_keys($json['require-dev']);
-
-        if (in_array(needle: 'drupal/core', haystack: $dependencies, strict: true) || in_array(needle: 'drupal/core-recommended', haystack: $dependencies, strict: true)) {
-            $projectType = ProjectType::Drupal->value;
-        } elseif (in_array(needle: 'sculpin/sculpin', haystack: $dependencies, strict: true)) {
-            $projectType = ProjectType::Sculpin->value;
-        } elseif (in_array(needle: 'symfony/framework-bundle', haystack: $dependencies, strict: true)) {
-            $projectType = ProjectType::Symfony->value;
-        }
-    }
-
-    // Even if the project type is found automatically, still override it with
-    // the option value if there is one.
-    $projectType = $input->getOption('type') ?? $projectType;
-
-    $isDockerCompose = $filesystem->exists($workingDir . '/docker-compose.yaml');
-
-    // TODO: only allow defined commands - build, install, test, run.
-    switch ($input->getArgument('command')) {
-        case 'build':
-            switch ($projectType) {
-                case ProjectType::Drupal->value:
-                    if ($isDockerCompose) {
-                        $process = Process::create(
-                            command: ['docker', 'compose', 'build'],
-                            extraArgs: $extraArgs,
-                            workingDir: $workingDir,
-                        );
-                        $process->run();
-                    }
-                    break;
-
-                case ProjectType::Symfony->value:
-                    // TODO: run humbug/box if added to generate a phar?
-                    throw new RuntimeException('No build command set for Symfony projects.');
-
-                case ProjectType::Sculpin->value:
-                    $process = Process::create(
-                        command: ['./vendor/bin/sculpin', 'generate'],
-                        extraArgs: $extraArgs,
-                        workingDir: $workingDir,
-                    );
-                    $process->run();
-                    break;
-            }
-            break;
-
-        case 'install':
-            // TODO: Composer in Docker Compose?
-            $process = Process::create(
-                command: ['composer', 'install'],
-                extraArgs: $extraArgs,
-                workingDir: $workingDir,
-            );
-            $process->run();
-            break;
-
-        case 'run':
-            if ($isDockerCompose) {
-                $process = Process::create(
-                    command: ['docker', 'compose', 'up'],
-                    extraArgs: $extraArgs,
-                    workingDir: $workingDir,
-                );
-                $process->setTimeout(null);
-                $process->run();
-            } else {
-                switch ($projectType) {
-                    case ProjectType::Sculpin->value:
-                        $process = Process::create(
-                            command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch'],
-                            extraArgs: $extraArgs,
-                            workingDir: $workingDir,
-                        );
-                        $process->setTimeout(null);
-                        $process->run();
-                        break;
-                }
-            }
-            break;
-
-        case 'test':
-            // TODO: Pest and Behat.
-            if (in_array(needle: 'brianium/paratest', haystack: $devDependencies, strict: true)) {
-                $command = ['./vendor/bin/paratest'];
-            } else {
-                $command = ['./vendor/bin/phpunit'];
-            }
-
-            // TODO: commands in Docker Compose?
-            $process = Process::create(
-                command: $command,
-                extraArgs: $extraArgs,
-                workingDir: $workingDir,
-            );
-            $process->run();
-            break;
-    }
-
-    return 0;
-});
+$application->addCommands([
+    new BuildCommand(name: 'build'),
+    new InstallCommand(name: 'install'),
+    new RunCommand(name: 'run'),
+    new TestCommand(name: 'test'),
+]);
 
 $application->run();
