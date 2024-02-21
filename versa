@@ -44,6 +44,8 @@ $application->addOption(
 $application->setCode(function (InputInterface $input): int {
     $projectType = null;
 
+    $devDependencies = [];
+
     $extraArgs = $input->getOption('extra-args');
     $workingDir = $input->getOption('working-dir');
 
@@ -59,6 +61,7 @@ $application->setCode(function (InputInterface $input): int {
         );
 
         $dependencies = array_keys($json['require']);
+        $devDependencies = array_keys($json['require-dev']);
 
         if (in_array(needle: 'drupal/core', haystack: $dependencies, strict: true) || in_array(needle: 'drupal/core-recommended', haystack: $dependencies, strict: true)) {
             $projectType = ProjectType::Drupal->value;
@@ -135,10 +138,16 @@ $application->setCode(function (InputInterface $input): int {
             break;
 
         case 'test':
-            // TODO: PHPUnit, Pest or ParaTest.
+            // TODO: Pest and Behat.
+            if (in_array(needle: 'brianium/paratest', haystack: $devDependencies, strict: true)) {
+                $command = ['./vendor/bin/paratest'];
+            } else {
+                $command = ['./vendor/bin/phpunit'];
+            }
+
             // TODO: commands in Docker Compose?
             $process = Process::create(
-                command: ['./vendor/bin/phpunit'],
+                command: $command,
                 extraArgs: $extraArgs,
                 workingDir: $workingDir,
             );
