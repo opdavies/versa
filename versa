@@ -152,6 +152,7 @@ $application->setCode(function (InputInterface $input): int {
                 extraArgs: $extraArgs,
                 workingDir: $workingDir,
             );
+            $process->run();
             break;
     }
 
