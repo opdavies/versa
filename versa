@@ -61,6 +61,7 @@ $application->setCode(function (InputInterface $input): int {
         );
 
         $dependencies = array_keys($json['require']);
+        // TODO: what if there are no dev dependencies?
         $devDependencies = array_keys($json['require-dev']);
 
         if (in_array(needle: 'drupal/core', haystack: $dependencies, strict: true) || in_array(needle: 'drupal/core-recommended', haystack: $dependencies, strict: true)) {
