@@ -30,7 +30,7 @@ final class InstallCommand extends AbstractCommand
                 language: $this->getProjectLanguage($filesystem, $workingDir, $input),
                 workingDir: $workingDir,
             ),
-            extraArgs: $extraArgs,
+            extraArgs: explode(separator: ' ', string: $extraArgs),
             workingDir: $workingDir,
         );
 

@@ -13,6 +13,7 @@
 
 ### Fixed
 
+* Support multiple extra args with spaces, e.g. `versa test --testdox --filter foo`.
 * Prevent timeout errors with `versa run`.
 
 ## 0.2.0
