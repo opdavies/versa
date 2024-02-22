@@ -8,14 +8,16 @@ use App\Console\Command\InstallCommand;
 use App\Console\Command\RunCommand;
 use App\Console\Command\TestCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Filesystem\Filesystem;
 
 $application = new Application();
+$filesystem = new Filesystem();
 
 $application->addCommands([
-    new BuildCommand(name: 'build'),
-    new InstallCommand(name: 'install'),
-    new RunCommand(name: 'run'),
-    new TestCommand(name: 'test'),
+    new BuildCommand(filesystem: $filesystem, name: 'build'),
+    new InstallCommand(filesystem: $filesystem, name: 'install'),
+    new RunCommand(filesystem: $filesystem, name: 'run'),
+    new TestCommand(filesystem: $filesystem, name: 'test'),
 ]);
 
 $application->run();

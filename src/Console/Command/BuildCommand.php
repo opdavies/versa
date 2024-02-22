@@ -2,6 +2,7 @@
 
 namespace App\Console\Command;
 
+use App\Action\DetermineProjectLanguage;
 use App\Enum\ProjectLanguage;
 use App\Enum\ProjectType;
 use App\Process\Process;
@@ -15,20 +16,22 @@ final class BuildCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $projectLanguage = null;
         $projectType = null;
 
         $extraArgs = $input->getOption('extra-args');
         $workingDir = $input->getOption('working-dir');
+
+        $language = $input->getOption('language') ?? (new DetermineProjectLanguage(
+            filesystem: $this->filesystem,
+            workingDir: $workingDir,
+        ))->getLanguage();
 
         $filesystem = new Filesystem();
 
         // Attempt to prepopulate some of the options, such as the project type
         // based on its dependencies.
         // TODO: move this logic to a service so it can be tested.
-        if ($filesystem->exists($workingDir.'/composer.json')) {
-            $projectLanguage = ProjectLanguage::PHP->value;
-
+        if ($language === ProjectLanguage::PHP->value) {
             $json = json_decode(
                 json: strval(file_get_contents($workingDir.'/composer.json')),
                 associative: true,
@@ -44,18 +47,17 @@ final class BuildCommand extends AbstractCommand
                 $projectType = ProjectType::Symfony->value;
             }
         } elseif ($filesystem->exists($workingDir.'/fractal.config.js')) {
-            $projectLanguage = ProjectLanguage::JavaScript->value;
+            $language = ProjectLanguage::JavaScript->value;
             $projectType = ProjectType::Fractal->value;
         }
 
-        // Even if the project language or type is found automatically, still
-        // override it with the option value if there is one.
-        $projectLanguage = $input->getOption('language') ?? $projectLanguage;
+        // Even if the project type is found automatically, still override it
+        // with the option value if there is one.
         $projectType = $input->getOption('type') ?? $projectType;
 
         $isDockerCompose = $filesystem->exists($workingDir . '/docker-compose.yaml');
 
-        switch ($projectLanguage) {
+        switch ($language) {
             case ProjectLanguage::PHP->value:
                 switch ($projectType) {
                     case ProjectType::Drupal->value:
@@ -83,7 +85,7 @@ final class BuildCommand extends AbstractCommand
 
                         $process->run();
                         break;
-            }
+                }
 
             case ProjectLanguage::JavaScript->value:
                 switch ($projectType) {

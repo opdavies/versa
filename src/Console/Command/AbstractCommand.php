@@ -4,9 +4,17 @@ namespace App\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Filesystem\Filesystem;
 
 abstract class AbstractCommand extends Command
 {
+    public function __construct(
+        string $name,
+        protected Filesystem $filesystem,
+    ) {
+        parent::__construct(name: $name);
+    }
+
     protected function configure(): void
     {
         $this->addOption(

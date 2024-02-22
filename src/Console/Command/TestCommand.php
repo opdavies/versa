@@ -14,6 +14,8 @@ final class TestCommand extends AbstractCommand
         $extraArgs = $input->getOption('extra-args');
         $workingDir = $input->getOption('working-dir');
 
+        // TODO: add support for node and jest.
+
         // TODO: move this logic to a service so it can be tested.
         $json = json_decode(
             json: strval(file_get_contents($workingDir.'/composer.json')),

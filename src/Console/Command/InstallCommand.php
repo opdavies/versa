@@ -2,6 +2,7 @@
 
 namespace App\Console\Command;
 
+use App\Action\DetermineProjectLanguage;
 use App\Enum\ProjectLanguage;
 use App\Process\Process;
 use Symfony\Component\Console\Command\Command;
@@ -16,10 +17,10 @@ final class InstallCommand extends AbstractCommand
         $extraArgs = $input->getOption('extra-args');
         $workingDir = $input->getOption('working-dir');
 
-        // TODO: What to do if a project contains multiple languages?
-        // e.g. a composer.lock file (PHP) and pnpm-lock.yaml file (JS)?
-
-        // TODO: validate the language is an allowed value.
+        $language = $input->getOption('language') ?? (new DetermineProjectLanguage(
+            filesystem: $this->filesystem,
+            workingDir: $workingDir,
+        ))->getLanguage();
 
         $filesystem = new Filesystem();
 
@@ -27,7 +28,7 @@ final class InstallCommand extends AbstractCommand
         $process = Process::create(
             command: $this->getCommand(
                 filesystem: $filesystem,
-                language: $this->getProjectLanguage($filesystem, $workingDir, $input),
+                language: $language,
                 workingDir: $workingDir,
             ),
             extraArgs: explode(separator: ' ', string: $extraArgs),
@@ -59,24 +60,5 @@ final class InstallCommand extends AbstractCommand
         }
 
         return ['composer', 'install'];
-    }
-
-    /**
-     * @param Filesystem $filesystem
-     * @param non-empty-string $workingDir
-     * @param InputInterface $input
-     * @return non-empty-string
-     */
-    private function getProjectLanguage(Filesystem $filesystem, string $workingDir, InputInterface $input): string {
-        $projectLanguage = null;
-
-        // Determine the language based on the files.
-        if ($filesystem->exists($workingDir.'/composer.json')) {
-            $projectLanguage = ProjectLanguage::PHP->value;
-        } elseif ($filesystem->exists($workingDir.'/package.json')) {
-            $projectLanguage = ProjectLanguage::JavaScript->value;
-        }
-
-        return $input->getOption('language') ?? $projectLanguage;
     }
 }
