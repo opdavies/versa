@@ -21,10 +21,13 @@ final class InstallCommand extends AbstractCommand
 
         // TODO: validate the language is an allowed value.
 
+        $filesystem = new Filesystem();
+
         // TODO: Composer in Docker Compose?
         $process = Process::create(
             command: $this->getCommand(
-                language: $input->getOption('language'),
+                filesystem: $filesystem,
+                language: $this->getProjectLanguage($filesystem, $workingDir, $input),
                 workingDir: $workingDir,
             ),
             extraArgs: $extraArgs,
@@ -38,14 +41,13 @@ final class InstallCommand extends AbstractCommand
     }
 
     /**
+     * @param Filesystem $filesystem
      * @param non-empty-string $language
      * @param non-empty-string $workingDir
      * @return non-empty-array<int, non-empty-string>
      */
-    private function getCommand(string $language, string $workingDir): array
+    private function getCommand(Filesystem $filesystem, string $language, string $workingDir): array
     {
-        $filesystem = new Filesystem();
-
         if ($language === ProjectLanguage::JavaScript->value) {
             if ($filesystem->exists($workingDir.'/yarn.lock')) {
                 return ['yarn'];
@@ -59,4 +61,22 @@ final class InstallCommand extends AbstractCommand
         return ['composer', 'install'];
     }
 
+    /**
+     * @param Filesystem $filesystem
+     * @param non-empty-string $workingDir
+     * @param InputInterface $input
+     * @return non-empty-string
+     */
+    private function getProjectLanguage(Filesystem $filesystem, string $workingDir, InputInterface $input): string {
+        $projectLanguage = null;
+
+        // Determine the language based on the files.
+        if ($filesystem->exists($workingDir.'/composer.json')) {
+            $projectLanguage = ProjectLanguage::PHP->value;
+        } elseif ($filesystem->exists($workingDir.'/package.json')) {
+            $projectLanguage = ProjectLanguage::JavaScript->value;
+        }
+
+        return $input->getOption('language') ?? $projectLanguage;
+    }
 }

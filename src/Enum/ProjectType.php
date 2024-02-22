@@ -6,6 +6,9 @@ namespace App\Enum;
 
 enum ProjectType: string
 {
+    // JavaScript.
+    case Fractal = 'fractal';
+
     // PHP.
     case Drupal = 'drupal';
     case Sculpin = 'sculpin';
