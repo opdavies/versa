@@ -1,2 +1,4 @@
-Add TypeScript and JavaScript suppport - e.g. Fractal
+Keep adding JS/TS support
 Review https://github.com/phpstan/phpstan-symfony
+Add tests for determining the correct project language and type based on present files
+Add documentation for each project language and type - table of command that are run?
