@@ -4,17 +4,17 @@
 
 ### Added
 
-* Add initial JavaScript/TypeScript/Fractal support to `versa install` and `versa run`.
-* Add a Symfony project type.
-* Automatically use PHPUnit or ParaTest based on `require-dev` dependencies.
-* Automatically find the PHP project type (i.e. Drupal or Sculpin) based on its `composer.json` dependencies.
-* Add `versa build` to build a Sculpin project.
-* Add `--extra-args` to pass extra arguments to the underlying command.
+- Add initial JavaScript/TypeScript/Fractal support to `versa install` and `versa run`.
+- Add a Symfony project type.
+- Automatically use PHPUnit or ParaTest based on `require-dev` dependencies.
+- Automatically find the PHP project type (i.e. Drupal or Sculpin) based on its `composer.json` dependencies.
+- Add `versa build` to build a Sculpin project.
+- Add `--extra-args` to pass extra arguments to the underlying command.
 
 ### Fixed
 
-* Support multiple extra args with spaces, e.g. `versa test --testdox --filter foo`.
-* Prevent timeout errors with `versa run`.
+- Support multiple extra args with spaces, e.g. `versa test --testdox --filter foo`.
+- Prevent timeout errors with `versa run`.
 
 ## 0.2.0
 
