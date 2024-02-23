@@ -31,7 +31,7 @@ final class InstallCommand extends AbstractCommand
                 language: $language,
                 workingDir: $workingDir,
             ),
-            extraArgs: explode(separator: ' ', string: $extraArgs),
+            extraArgs: explode(separator: ' ', string: strval($extraArgs)),
             workingDir: $workingDir,
         );
 

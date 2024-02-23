@@ -64,7 +64,7 @@ final class BuildCommand extends AbstractCommand
                         if ($isDockerCompose) {
                             $process = Process::create(
                                 command: ['docker', 'compose', 'build'],
-                                extraArgs: explode(separator: ' ', string: $extraArgs),
+                                extraArgs: explode(separator: ' ', string: strval($extraArgs)),
                                 workingDir: $workingDir,
                             );
 
@@ -79,7 +79,7 @@ final class BuildCommand extends AbstractCommand
                     case ProjectType::Sculpin->value:
                         $process = Process::create(
                             command: ['./vendor/bin/sculpin', 'generate'],
-                            extraArgs: explode(separator: ' ', string: $extraArgs),
+                            extraArgs: explode(separator: ' ', string: strval($extraArgs)),
                             workingDir: $workingDir,
                         );
 
@@ -92,7 +92,7 @@ final class BuildCommand extends AbstractCommand
                     case ProjectType::Fractal->value:
                         $process = Process::create(
                             command: ['npx', 'fractal', 'build'],
-                            extraArgs: explode(separator: ' ', string: $extraArgs),
+                            extraArgs: explode(separator: ' ', string: strval($extraArgs)),
                             workingDir: $workingDir,
                         );
 

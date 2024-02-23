@@ -14,7 +14,7 @@ final class Process
     /**
      * @param non-empty-array<int, non-empty-string> $command
      * @param string $workingDir
-     * @param non-empty-string[] $extraArgs
+     * @param string[] $extraArgs
      */
     public static function create(array $command, string $workingDir, array $extraArgs = []): SymfonyProcess
     {
