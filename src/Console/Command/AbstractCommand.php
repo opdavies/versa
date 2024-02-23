@@ -9,8 +9,8 @@ use Symfony\Component\Filesystem\Filesystem;
 abstract class AbstractCommand extends Command
 {
     public function __construct(
-        string $name,
         protected Filesystem $filesystem,
+        ?string $name = null,
     ) {
         parent::__construct(name: $name);
     }
