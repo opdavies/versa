@@ -11,7 +11,7 @@ final class TestCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $extraArgs = $input->getOption('extra-args');
+        $args = $input->getOption('args');
         $workingDir = $input->getOption('working-dir');
 
         // TODO: add support for node and jest.
@@ -33,8 +33,8 @@ final class TestCommand extends AbstractCommand
 
         // TODO: commands in Docker Compose?
         $process = Process::create(
+            args: explode(separator: ' ', string: $args),
             command: $command,
-            extraArgs: explode(separator: ' ', string: $extraArgs),
             workingDir: $workingDir,
         );
 

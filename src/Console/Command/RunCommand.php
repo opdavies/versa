@@ -17,7 +17,7 @@ final class RunCommand extends AbstractCommand
     {
         $projectType = null;
 
-        $extraArgs = $input->getOption('extra-args');
+        $args = $input->getOption('args');
         $workingDir = $input->getOption('working-dir');
 
         $filesystem = new Filesystem();
@@ -60,8 +60,8 @@ final class RunCommand extends AbstractCommand
 
         if ($isDockerCompose) {
             $process = Process::create(
+                args: $args,
                 command: ['docker', 'compose', 'up'],
-                extraArgs: $extraArgs,
                 workingDir: $workingDir,
             );
 
@@ -71,8 +71,8 @@ final class RunCommand extends AbstractCommand
             switch ($projectType) {
                 case ProjectType::Fractal->value:
                     $process = Process::create(
+                        args: $args,
                         command: ['npx', 'fractal', 'start', '--sync'],
-                        extraArgs: $extraArgs,
                         workingDir: $workingDir,
                     );
 
@@ -82,8 +82,8 @@ final class RunCommand extends AbstractCommand
 
                 case ProjectType::Sculpin->value:
                     $process = Process::create(
+                        args: $args,
                         command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch'],
-                        extraArgs: $extraArgs,
                         workingDir: $workingDir,
                     );
 

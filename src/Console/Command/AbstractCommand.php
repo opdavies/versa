@@ -18,7 +18,7 @@ abstract class AbstractCommand extends Command
     protected function configure(): void
     {
         $this->addOption(
-            name: 'extra-args',
+            name: 'args',
             shortcut: 'a',
             mode: InputArgument::OPTIONAL,
             description: 'Any additonal arguments to pass to the command.',

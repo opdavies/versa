@@ -14,11 +14,11 @@ final class Process
     /**
      * @param non-empty-array<int, non-empty-string> $command
      * @param string $workingDir
-     * @param string[] $extraArgs
+     * @param string[] $args
      */
-    public static function create(array $command, string $workingDir, array $extraArgs = []): SymfonyProcess
+    public static function create(array $command, string $workingDir, array $args = []): SymfonyProcess
     {
-        $process = new SymfonyProcess(command: array_filter([...$command, ...$extraArgs]));
+        $process = new SymfonyProcess(command: array_filter([...$command, ...$args]));
         $process->setTty(true);
         $process->setWorkingDirectory($workingDir);
 

@@ -14,7 +14,7 @@ final class InstallCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $extraArgs = $input->getOption('extra-args');
+        $args = $input->getOption('args');
         $workingDir = $input->getOption('working-dir');
 
         $language = $input->getOption('language') ?? (new DetermineProjectLanguage(
@@ -26,12 +26,12 @@ final class InstallCommand extends AbstractCommand
 
         // TODO: Composer in Docker Compose?
         $process = Process::create(
+            args: explode(separator: ' ', string: strval($args)),
             command: $this->getCommand(
                 filesystem: $filesystem,
                 language: $language,
                 workingDir: $workingDir,
             ),
-            extraArgs: explode(separator: ' ', string: strval($extraArgs)),
             workingDir: $workingDir,
         );
 

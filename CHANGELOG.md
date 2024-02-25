@@ -11,6 +11,10 @@
 - Add `versa build` to build a Sculpin project.
 - Add `--extra-args` to pass extra arguments to the underlying command.
 
+### Changed
+
+- Rename `--extra-args` to `--args`.
+
 ### Fixed
 
 - Support multiple extra args with spaces, e.g. `versa test --testdox --filter foo`.

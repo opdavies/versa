@@ -18,7 +18,7 @@ final class BuildCommand extends AbstractCommand
     {
         $projectType = null;
 
-        $extraArgs = $input->getOption('extra-args');
+        $args = $input->getOption('args');
         $workingDir = $input->getOption('working-dir');
 
         $language = $input->getOption('language') ?? (new DetermineProjectLanguage(
@@ -63,8 +63,8 @@ final class BuildCommand extends AbstractCommand
                     case ProjectType::Drupal->value:
                         if ($isDockerCompose) {
                             $process = Process::create(
+                                args: explode(separator: ' ', string: strval($args)),
                                 command: ['docker', 'compose', 'build'],
-                                extraArgs: explode(separator: ' ', string: strval($extraArgs)),
                                 workingDir: $workingDir,
                             );
 
@@ -78,8 +78,8 @@ final class BuildCommand extends AbstractCommand
 
                     case ProjectType::Sculpin->value:
                         $process = Process::create(
+                            args: explode(separator: ' ', string: strval($args)),
                             command: ['./vendor/bin/sculpin', 'generate'],
-                            extraArgs: explode(separator: ' ', string: strval($extraArgs)),
                             workingDir: $workingDir,
                         );
 
@@ -91,8 +91,8 @@ final class BuildCommand extends AbstractCommand
                 switch ($projectType) {
                     case ProjectType::Fractal->value:
                         $process = Process::create(
+                            args: explode(separator: ' ', string: strval($args)),
                             command: ['npx', 'fractal', 'build'],
-                            extraArgs: explode(separator: ' ', string: strval($extraArgs)),
                             workingDir: $workingDir,
                         );
 
