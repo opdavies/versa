@@ -5,6 +5,7 @@ require __DIR__.'/vendor/autoload.php';
 
 use App\Console\Command\BuildCommand;
 use App\Console\Command\InstallCommand;
+use App\Console\Command\PackageInstallCommand;
 use App\Console\Command\RunCommand;
 use App\Console\Command\TestCommand;
 use Symfony\Component\Console\Application;
@@ -16,6 +17,7 @@ $filesystem = new Filesystem();
 $application->addCommands([
     new BuildCommand(filesystem: $filesystem, name: 'build'),
     new InstallCommand(filesystem: $filesystem, name: 'install'),
+    new PackageInstallCommand(filesystem: $filesystem, name: 'package-install'),
     new RunCommand(filesystem: $filesystem, name: 'run'),
     new TestCommand(filesystem: $filesystem, name: 'test'),
 ]);

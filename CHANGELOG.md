@@ -4,6 +4,7 @@
 
 ### Added
 
+- Add `package-install` command to add a new package.
 - Add initial JavaScript/TypeScript/Fractal support to `versa install` and `versa run`.
 - Add a Symfony project type.
 - Automatically use PHPUnit or ParaTest based on `require-dev` dependencies.
