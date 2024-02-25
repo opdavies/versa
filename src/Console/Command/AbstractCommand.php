@@ -8,6 +8,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class AbstractCommand extends Command
 {
+    protected static string $description;
+
     public function __construct(
         protected Filesystem $filesystem,
         ?string $name = null,
@@ -17,6 +19,8 @@ abstract class AbstractCommand extends Command
 
     protected function configure(): void
     {
+        $this->setDescription(static::$description);
+
         $this->addOption(
             name: 'args',
             shortcut: 'a',

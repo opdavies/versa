@@ -12,6 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PackageInstallCommand extends AbstractCommand
 {
+    public static string $description = 'Install a new package';
+
     public function configure(): void
     {
         parent::configure();

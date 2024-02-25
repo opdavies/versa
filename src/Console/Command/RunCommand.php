@@ -13,6 +13,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class RunCommand extends AbstractCommand
 {
+    public static string $description = 'Run the project';
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $projectType = null;

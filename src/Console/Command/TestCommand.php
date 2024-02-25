@@ -9,6 +9,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class TestCommand extends AbstractCommand
 {
+    public static string $description = 'Run the project\'s tests';
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $args = $input->getOption('args');

@@ -14,6 +14,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class BuildCommand extends AbstractCommand
 {
+    public static string $description = 'Build the project';
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $projectType = null;

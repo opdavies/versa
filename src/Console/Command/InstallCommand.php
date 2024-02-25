@@ -12,6 +12,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class InstallCommand extends AbstractCommand
 {
+    public static string $description = 'Install the project\'s dependencies';
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $args = $input->getOption('args');
