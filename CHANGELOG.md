@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+None.
+
+## 0.3.0 (2024-02-25)
+
 ### Added
 
 - Add `package-install` command to add a new package.
