@@ -3,6 +3,7 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 
+use App\Action\DeterminePackageManager;
 use App\Console\Command\BuildCommand;
 use App\Console\Command\InstallCommand;
 use App\Console\Command\PackageInstallCommand;

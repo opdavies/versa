@@ -2,9 +2,12 @@
 
 namespace App\Console\Command;
 
+use App\Action\DeterminePackageManager;
 use App\Action\DetermineProjectLanguage;
+use App\Enum\PackageManager;
 use App\Enum\ProjectLanguage;
 use App\Process\Process;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,11 +32,7 @@ final class InstallCommand extends AbstractCommand
         // TODO: Composer in Docker Compose?
         $process = Process::create(
             args: explode(separator: ' ', string: strval($args)),
-            command: $this->getCommand(
-                filesystem: $filesystem,
-                language: $language,
-                workingDir: $workingDir,
-            ),
+            command: $this->getCommand(language: $language, workingDir: $workingDir),
             workingDir: $workingDir,
         );
 
@@ -44,23 +43,35 @@ final class InstallCommand extends AbstractCommand
     }
 
     /**
-     * @param Filesystem $filesystem
      * @param non-empty-string $language
      * @param non-empty-string $workingDir
      * @return non-empty-array<int, non-empty-string>
+     * @throws RuntimeException If the lanuage cannot be determined.
      */
-    private function getCommand(Filesystem $filesystem, string $language, string $workingDir): array
+    private function getCommand(string $language, string $workingDir): array
     {
         if ($language === ProjectLanguage::JavaScript->value) {
-            if ($filesystem->exists($workingDir.'/yarn.lock')) {
-                return ['yarn'];
-            } elseif ($filesystem->exists($workingDir.'/pnpm-lock.yaml')) {
-                return ['pnpm', 'install'];
-            } else {
-                return ['npm', 'install'];
+            return ['composer', 'install'];
+        } elseif ($language === ProjectLanguage::JavaScript->value) {
+            $packageManager = new DeterminePackageManager(
+                filesystem: $this->filesystem,
+                projectLanguage: $language,
+                workingDir: $workingDir,
+            );
+
+            switch ($packageManager->getPackageManager()) {
+                case PackageManager::pnpm->value:
+                    return ['pnpm', 'install'];
+
+                case PackageManager::yarn->value:
+                    return ['yarn'];
+
+                default:
+                    return ['npm', 'install'];
             }
         }
 
-        return ['composer', 'install'];
+        // TODO: add a test to ensure the exception is thrown?
+        throw new RuntimeException('Project language cannot be determined.');
     }
 }

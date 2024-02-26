@@ -2,7 +2,9 @@
 
 namespace App\Console\Command;
 
+use App\Action\DeterminePackageManager;
 use App\Action\DetermineProjectLanguage;
+use App\Enum\PackageManager;
 use App\Enum\ProjectLanguage;
 use App\Process\Process;
 use Symfony\Component\Console\Command\Command;
@@ -47,12 +49,24 @@ final class PackageInstallCommand extends AbstractCommand
                 break;
 
             case ProjectLanguage::JavaScript->value:
-                if ($this->filesystem->exists($workingDir.'/yarn.lock')) {
-                    $command = ['yarn', 'add'];
-                } elseif ($this->filesystem->exists($workingDir.'/pnpm-lock.yaml')) {
-                    $command = ['pnpm', 'install'];
-                } else {
-                    $command = ['npm', 'install'];
+                $packageManager = new DeterminePackageManager(
+                    filesystem: $this->filesystem,
+                    projectLanguage: $language,
+                    workingDir: $workingDir,
+                );
+
+                switch ($packageManager->getPackageManager()) {
+                    case PackageManager::pnpm->value:
+                        $command = ['pnpm', 'install'];
+                        break;
+
+                    case PackageManager::yarn->value:
+                        $command = ['yarn', 'add'];
+                        break;
+
+                    default:
+                        $command = ['npm', 'install'];
+                        break;
                 }
 
                 $process = Process::create(

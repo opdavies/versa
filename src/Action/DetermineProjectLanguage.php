@@ -5,7 +5,7 @@ namespace App\Action;
 use App\Enum\ProjectLanguage;
 use Symfony\Component\Filesystem\Filesystem;
 
-final class DetermineProjectLanguage
+final class DetermineProjectLanguage implements DetermineProjectLanguageInterface
 {
     public function __construct(
         private Filesystem $filesystem,
@@ -13,9 +13,6 @@ final class DetermineProjectLanguage
     ) {
     }
 
-    /**
-     * @return non-empty-string
-     */
     public function getLanguage(): string
     {
         if ($this->filesystem->exists($this->workingDir.'/composer.json')) {

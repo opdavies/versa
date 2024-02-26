@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Tests;
+
 use App\Action\DetermineProjectLanguage;
 use App\Enum\ProjectLanguage;
 use PHPUnit\Framework\TestCase;
