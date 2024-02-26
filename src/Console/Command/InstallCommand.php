@@ -8,15 +8,17 @@ use App\Enum\PackageManager;
 use App\Enum\ProjectLanguage;
 use App\Process\Process;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
+#[AsCommand(
+    description: 'Install the project\'s dependencies',
+    name: 'install',
+)]
 final class InstallCommand extends AbstractCommand
 {
-    public static string $description = 'Install the project\'s dependencies';
-
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $args = $input->getOption('args');
@@ -26,8 +28,6 @@ final class InstallCommand extends AbstractCommand
             filesystem: $this->filesystem,
             workingDir: $workingDir,
         ))->getLanguage();
-
-        $filesystem = new Filesystem();
 
         // TODO: Composer in Docker Compose?
         $process = Process::create(

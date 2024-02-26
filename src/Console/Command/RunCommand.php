@@ -6,15 +6,18 @@ use App\Action\DetermineProjectLanguage;
 use App\Enum\ProjectLanguage;
 use App\Enum\ProjectType;
 use App\Process\Process;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
+#[AsCommand(
+    description: 'Run the project',
+    name: 'run',
+)]
 final class RunCommand extends AbstractCommand
 {
-    public static string $description = 'Run the project';
-
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $projectType = null;

@@ -1,13 +1,17 @@
 {
+    "main": "bin/console",
     "output": "dist/versa",
-    "files": [
-      "versa"
-    ],
     "directories": [
+      "config",
       "src",
       "vendor"
     ],
+    "files": [
+      ".env.local.php",
+      "autoload_runtime.template"
+    ],
     "check-requirements": true,
     "exclude-composer-files": false,
+    "force-autodiscovery": true,
     "compression": "GZ"
 }

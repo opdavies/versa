@@ -7,15 +7,18 @@ use App\Action\DetermineProjectLanguage;
 use App\Enum\PackageManager;
 use App\Enum\ProjectLanguage;
 use App\Process\Process;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    description: 'Install a new package',
+    name: 'package-install',
+)]
 final class PackageInstallCommand extends AbstractCommand
 {
-    public static string $description = 'Install a new package';
-
     public function configure(): void
     {
         parent::configure();

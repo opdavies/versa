@@ -7,14 +7,19 @@ use App\Enum\ProjectLanguage;
 use App\Enum\ProjectType;
 use App\Process\Process;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
+#[AsCommand(
+    description: 'Install the project\'s dependencies',
+    name: 'build',
+)]
 final class BuildCommand extends AbstractCommand
 {
-    public static string $description = 'Build the project';
+    public static string $description = '';
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
