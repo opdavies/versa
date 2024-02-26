@@ -11,7 +11,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     description: 'Install the project\'s dependencies',
@@ -33,8 +32,6 @@ final class BuildCommand extends AbstractCommand
             workingDir: $workingDir,
         ))->getLanguage();
 
-        $filesystem = new Filesystem();
-
         // Attempt to prepopulate some of the options, such as the project type
         // based on its dependencies.
         // TODO: move this logic to a service so it can be tested.
@@ -54,7 +51,7 @@ final class BuildCommand extends AbstractCommand
             } elseif ($this->isSymfonyProject($dependencies)) {
                 $projectType = ProjectType::Symfony->value;
             }
-        } elseif ($filesystem->exists($workingDir.'/fractal.config.js')) {
+        } elseif ($this->filesystem->exists($workingDir.'/fractal.config.js')) {
             $language = ProjectLanguage::JavaScript->value;
             $projectType = ProjectType::Fractal->value;
         }
@@ -63,7 +60,7 @@ final class BuildCommand extends AbstractCommand
         // with the option value if there is one.
         $projectType = $input->getOption('type') ?? $projectType;
 
-        $isDockerCompose = $filesystem->exists($workingDir . '/docker-compose.yaml');
+        $isDockerCompose = $this->filesystem->exists($workingDir . '/docker-compose.yaml');
 
         switch ($language) {
             case ProjectLanguage::PHP->value:
