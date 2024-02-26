@@ -44,13 +44,14 @@ final class BuildCommand extends AbstractCommand
                 associative: true,
             );
 
+            /** @var non-empty-array<int, non-empty-string> */
             $dependencies = array_keys($json['require']);
 
-            if (in_array(needle: 'drupal/core', haystack: $dependencies, strict: true) || in_array(needle: 'drupal/core-recommended', haystack: $dependencies, strict: true)) {
+            if ($this->isDrupalProject($dependencies)) {
                 $projectType = ProjectType::Drupal->value;
-            } elseif (in_array(needle: 'sculpin/sculpin', haystack: $dependencies, strict: true)) {
+            } elseif ($this->isSculpinProject($dependencies)) {
                 $projectType = ProjectType::Sculpin->value;
-            } elseif (in_array(needle: 'symfony/framework-bundle', haystack: $dependencies, strict: true)) {
+            } elseif ($this->isSymfonyProject($dependencies)) {
                 $projectType = ProjectType::Symfony->value;
             }
         } elseif ($filesystem->exists($workingDir.'/fractal.config.js')) {
@@ -110,5 +111,30 @@ final class BuildCommand extends AbstractCommand
         }
 
         return Command::SUCCESS;
+    }
+
+   /**
+    * @param non-empty-string[] $dependencies
+    */
+    private function isDrupalProject(array $dependencies): bool
+    {
+        return in_array(needle: 'drupal/core', haystack: $dependencies, strict: true)
+            || in_array(needle: 'drupal/core-recommended', haystack: $dependencies, strict: true);
+    }
+
+    /**
+     * @param non-empty-string[] $dependencies
+     */
+    private function isSculpinProject(array $dependencies): bool
+    {
+        return in_array(needle: 'sculpin/sculpin', haystack: $dependencies, strict: true);
+    }
+
+    /**
+     * @param non-empty-string[] $dependencies
+     */
+    private function isSymfonyProject(array $dependencies): bool
+    {
+        return in_array(needle: 'symfony/framework-bundle', haystack: $dependencies, strict: true);
     }
 }
