@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-None.
+### Fixed
+
+- Fix `args` in `run` command.
 
 ## 0.3.0 (2024-02-25)
 
