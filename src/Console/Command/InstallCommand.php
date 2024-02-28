@@ -32,6 +32,11 @@ final class InstallCommand extends AbstractCommand
             ))->getLanguage();
         }
 
+        assert(
+            assertion: ProjectLanguage::isValid($language),
+            description: sprintf('%s is not a supported language.', $language),
+        );
+
         // TODO: Composer in Docker Compose?
         $process = Process::create(
             args: explode(separator: ' ', string: strval($args)),

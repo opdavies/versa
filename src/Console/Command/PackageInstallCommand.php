@@ -39,6 +39,11 @@ final class PackageInstallCommand extends AbstractCommand
             workingDir: $workingDir,
         ))->getLanguage();
 
+        assert(
+            assertion: ProjectLanguage::isValid($language),
+            description: sprintf('%s is not a supported language.', $language),
+        );
+
         switch ($language) {
             case ProjectLanguage::PHP->value:
                 $process = Process::create(

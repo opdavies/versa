@@ -32,6 +32,11 @@ final class BuildCommand extends AbstractCommand
             workingDir: $workingDir,
         ))->getLanguage();
 
+        assert(
+            assertion: ProjectLanguage::isValid($language),
+            description: sprintf('%s is not a supported language.', $language),
+        );
+
         // Attempt to prepopulate some of the options, such as the project type
         // based on its dependencies.
         // TODO: move this logic to a service so it can be tested.
@@ -59,6 +64,11 @@ final class BuildCommand extends AbstractCommand
         // Even if the project type is found automatically, still override it
         // with the option value if there is one.
         $projectType = $input->getOption('type') ?? $projectType;
+
+        assert(
+            assertion: ProjectType::isValid($projectType),
+            description: sprintf('%s is not a supported project type.', $projectType),
+        );
 
         $isDockerCompose = $this->filesystem->exists($workingDir . '/docker-compose.yaml');
 
