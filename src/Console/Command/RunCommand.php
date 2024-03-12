@@ -75,7 +75,7 @@ final class RunCommand extends AbstractCommand
 
         if ($isDockerCompose) {
             $process = Process::create(
-                args: explode(separator: ' ', string: $args ?? ''),
+                args: $args,
                 command: ['docker', 'compose', 'up'],
                 workingDir: $workingDir,
             );
@@ -86,7 +86,7 @@ final class RunCommand extends AbstractCommand
             switch ($projectType) {
                 case ProjectType::Fractal->value:
                     $process = Process::create(
-                        args: explode(separator: ' ', string: $args ?? ''),
+                        args: $args,
                         command: ['npx', 'fractal', 'start', '--sync'],
                         workingDir: $workingDir,
                     );
@@ -97,7 +97,7 @@ final class RunCommand extends AbstractCommand
 
                 case ProjectType::Sculpin->value:
                     $process = Process::create(
-                        args: explode(separator: ' ', string: $args ?? ''),
+                        args: $args,
                         command: ['./vendor/bin/sculpin', 'generate', '--server', '--watch'],
                         workingDir: $workingDir,
                     );

@@ -23,10 +23,13 @@ abstract class AbstractCommand extends Command
         // ./bin/console install -- --no-dev
         //
         // And to set the port and environment for a Sculpin project, multiple
-        // arguments can be passed at once as a string:
+        // arguments can be passed at once:
         //
-        // ./bin/console run -- '-e prod --port 8001'
-        $this->addArgument('*');
+        // ./bin/console run -- -e prod --port 8001
+        $this->addArgument(
+            mode: InputArgument::IS_ARRAY,
+            name: '*',
+        );
 
         $this->addOption(
             name: 'language',

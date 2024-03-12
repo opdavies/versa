@@ -21,12 +21,12 @@ final class PackageInstallCommand extends AbstractCommand
 {
     public function configure(): void
     {
-        parent::configure();
-
         $this->addArgument(
             name: 'package-name',
             mode: InputArgument::REQUIRED,
         );
+
+        parent::configure();
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -47,7 +47,7 @@ final class PackageInstallCommand extends AbstractCommand
         switch ($language) {
             case ProjectLanguage::PHP->value:
                 $process = Process::create(
-                    args: explode(separator: ' ', string: $args ?? ''),
+                    args: $args,
                     command: ['composer', 'require', $input->getArgument('package-name')],
                     workingDir: '.',
                 );
@@ -78,7 +78,7 @@ final class PackageInstallCommand extends AbstractCommand
                 }
 
                 $process = Process::create(
-                    args: explode(separator: ' ', string: $args ?? ''),
+                    args: $args,
                     command: $command,
                     workingDir: $workingDir,
                 );

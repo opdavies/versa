@@ -38,7 +38,7 @@ final class TestCommand extends AbstractCommand
 
         // TODO: commands in Docker Compose?
         $process = Process::create(
-            args: explode(separator: ' ', string: $args),
+            args: $args,
             command: $command,
             workingDir: $workingDir,
         );

@@ -39,7 +39,7 @@ final class InstallCommand extends AbstractCommand
 
         // TODO: Composer in Docker Compose?
         $process = Process::create(
-            args: explode(separator: ' ', string: strval($args)),
+            args: $args,
             command: $this->getCommand(language: $language, workingDir: $workingDir),
             workingDir: $workingDir,
         );
