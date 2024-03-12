@@ -16,7 +16,7 @@ final class TestCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $args = $input->getOption('args');
+        $args = $input->getArgument('*');
         $workingDir = $input->getOption('working-dir');
 
         // TODO: add support for node and jest.

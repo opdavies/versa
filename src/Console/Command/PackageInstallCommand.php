@@ -31,7 +31,7 @@ final class PackageInstallCommand extends AbstractCommand
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $args = $input->getOption('args');
+        $args = $input->getArgument('*');
         $workingDir = $input->getOption('working-dir');
 
         $language = $input->getOption('language') ?? (new DetermineProjectLanguage(

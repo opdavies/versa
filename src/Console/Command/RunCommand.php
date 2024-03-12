@@ -22,7 +22,7 @@ final class RunCommand extends AbstractCommand
     {
         $projectType = null;
 
-        $args = $input->getOption('args');
+        $args = $input->getArgument('*');
         $workingDir = $input->getOption('working-dir');
 
         $filesystem = new Filesystem();

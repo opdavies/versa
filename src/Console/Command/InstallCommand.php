@@ -21,7 +21,7 @@ final class InstallCommand extends AbstractCommand
 {
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $args = $input->getOption('args');
+        $args = $input->getArgument('*');
         $language = $input->getOption('language');
         $workingDir = $input->getOption('working-dir');
 

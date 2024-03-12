@@ -17,12 +17,16 @@ abstract class AbstractCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption(
-            name: 'args',
-            shortcut: 'a',
-            mode: InputArgument::OPTIONAL,
-            description: 'Any additonal arguments to pass to the command.',
-        );
+        // Allow for passing arbitrary arguments to the underlying command, for
+        // example, to run `composer install` with the `--no-dev` option:
+        //
+        // ./bin/console install -- --no-dev
+        //
+        // And to set the port and environment for a Sculpin project, multiple
+        // arguments can be passed at once as a string:
+        //
+        // ./bin/console run -- '-e prod --port 8001'
+        $this->addArgument('*');
 
         $this->addOption(
             name: 'language',

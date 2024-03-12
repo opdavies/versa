@@ -2,9 +2,13 @@
 
 ## Unreleased
 
-### Fixed
+N/A.
 
-- Fix `args` in `run` command.
+## 0.4.0 (2024-03-12)
+
+### Changed
+
+- Remove the `args` command and allow for arbitrary arguments - e.g. `./bin/console install -- --no-dev` to run `composer install` with the `--no-dev` option.
 
 ## 0.3.0 (2024-02-25)
 

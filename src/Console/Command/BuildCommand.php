@@ -24,7 +24,7 @@ final class BuildCommand extends AbstractCommand
     {
         $projectType = null;
 
-        $args = $input->getOption('args');
+        $args = $input->getArgument('*');
         $workingDir = $input->getOption('working-dir');
 
         $language = $input->getOption('language') ?? (new DetermineProjectLanguage(
