@@ -12,6 +12,8 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     description: 'Install the project\'s dependencies',
@@ -26,10 +28,41 @@ final class InstallCommand extends AbstractCommand
         $workingDir = $input->getOption('working-dir');
 
         if ($language === null) {
-            $language = (new DetermineProjectLanguage(
+            $languages = (new DetermineProjectLanguage(
                 filesystem: $this->filesystem,
                 workingDir: $workingDir,
-            ))->getLanguage();
+            ))->getLanguages();
+
+            // TODO: if more than one language is found, prompt to select which
+            // language to use. For now, always return the first language, which
+            // is consistent with what happens before this refactor.
+            $language = $languages->first()->value;
+
+            // TODO: throw an Exception if no language is found.
+
+            // TODO: if a project uses multiple languages, ask which language to use
+            // instead of using a default value?
+            //
+            // Currently, PHP will always be used over JavaScript if both are in the
+            // same project and an override, such as `versa install -l javascript`
+            // needs to be used to install the JavaScript/node dependencies.
+            //
+            // This could mean that `DetermineProjectLanguage` changes to
+            // `DetermineProjectLanguages` and returns a Collection of languages.
+            // If a single language is found, it is used. If multiple languages are
+            // found, the prompt is used to select which language to use.
+            if (false && $languages->count() > 1) {
+                $io = new SymfonyStyle($input, $output);
+
+                $choices = $languages
+                    ->mapWithKeys(fn (ProjectLanguage $language): array => [$language->value => $language->name])
+                    ->sort();
+
+                $language = $io->choice(
+                    question: 'Which language should I install',
+                    choices: $choices->toArray(),
+                );
+            }
         }
 
         assert(

@@ -3,6 +3,7 @@
 namespace App\Action;
 
 use App\Enum\ProjectLanguage;
+use Illuminate\Support\Collection;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class DetermineProjectLanguage implements DetermineProjectLanguageInterface
@@ -29,5 +30,26 @@ final class DetermineProjectLanguage implements DetermineProjectLanguageInterfac
         // TODO: validate the language is an allowed value.
 
         return ProjectLanguage::PHP->value;
+    }
+
+    /**
+     * Return the languages used in the project.
+     *
+     * @return Collection<int, ProjectLanguage>
+     */
+    public function getLanguages(): Collection
+    {
+        $languages = collect();
+
+
+        if ($this->filesystem->exists($this->workingDir.'/composer.json')) {
+            $languages->push(ProjectLanguage::PHP);
+        }
+
+        if ($this->filesystem->exists($this->workingDir.'/package.json')) {
+            $languages->push(ProjectLanguage::JavaScript);
+        }
+
+        return $languages;
     }
 }
