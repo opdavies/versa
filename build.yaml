@@ -11,7 +11,3 @@ flake:
 git:
   ignore:
     - /bin/
-
-# experimental:
-#   TODO: not yet supported in Symfony projects?
-#   createInclusiveGitIgnoreFile: true
